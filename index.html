@@ -49,7 +49,7 @@ header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--borde
 
 /* Search */
 .search-wrap{display:flex;gap:10px;margin-bottom:16px}
-.search-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.95rem;padding:14px 18px;border-radius:12px;outline:none;transition:border-color 0.2s;font-weight:300}
+.search-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.95rem;padding:14px 18px;border-radius:12px;outline:none;transition:border-color 0.2s;font-weight:300;min-width:0;white-space:normal;word-wrap:break-word}
 .search-input:focus{border-color:var(--accent)}
 .search-input::placeholder{color:var(--muted)}
 .btn-go{padding:14px 26px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:0.9rem;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
@@ -128,6 +128,46 @@ header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--borde
 /* Page footer */
 .page-footer{text-align:center;padding:36px 0 32px;font-family:var(--mono);font-size:0.62rem;color:var(--muted);line-height:2.2;border-top:1px solid var(--border);margin-top:8px}
 .page-footer strong{color:var(--text2);font-weight:500}
+
+/* ── Mobile responsive ── */
+@media(max-width:600px){
+  header{padding:28px 0 20px}
+  .logo{font-size:2rem}
+  .subtitle{font-size:0.78rem}
+
+  .score-bar{padding:10px 14px;font-size:0.78rem}
+  .score-num{font-size:1.1rem}
+
+  .topic-row{gap:6px;margin-bottom:16px}
+  .chip{padding:6px 12px;font-size:0.75rem}
+
+  .search-wrap{flex-direction:column;gap:8px}
+  .search-input{font-size:0.9rem;padding:13px 16px;width:100%;white-space:normal;word-wrap:break-word;height:auto;min-height:50px}
+  .btn-go{width:100%;padding:13px;font-size:0.9rem;text-align:center}
+
+  .btn-surprise{font-size:0.78rem;padding:9px 18px;margin-bottom:24px}
+
+  .card-header{padding:20px 18px 16px}
+  .question-text{font-size:1.1rem}
+  .concept-name{font-size:0.95rem}
+
+  .card-body{padding:18px}
+  .wiki-summary{font-size:0.88rem;line-height:1.75}
+
+  .facts-grid{grid-template-columns:1fr}
+  .yt-grid{grid-template-columns:1fr}
+
+  .card-footer{padding:12px 18px;flex-direction:column;align-items:flex-start;gap:8px}
+  .btn-next{width:100%;text-align:center;padding:11px}
+
+  .links-list .link-source{min-width:56px}
+  .links-list .link-title{font-size:0.78rem}
+
+  .related-chips{gap:6px}
+  .related-chip{font-size:0.74rem;padding:5px 12px}
+
+  .page-footer{font-size:0.58rem;padding:28px 0 24px}
+}
 </style>
 </head>
 <body>
@@ -135,7 +175,7 @@ header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--borde
   <header>
     <div class="logo">Eng<span>Explorer</span></div>
     <div class="subtitle">Engineering concepts explained the way they should have been in school</div>
-    <div class="credit">Designed &amp; built by <strong style="color:var(--text2)">Qi Zheng</strong> &nbsp;·&nbsp; developed with Claude AI</div>
+
   </header>
 
   <div class="score-bar">
@@ -155,7 +195,7 @@ header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--borde
   </div>
 
   <div class="search-wrap">
-    <input class="search-input" id="topicInput" placeholder="Ask anything — why does a bridge collapse? why do bolts loosen? why does ice form on wings?"/>
+    <textarea class="search-input" id="topicInput" placeholder="Ask anything — why does a bridge collapse? why do bolts loosen? why does ice form on wings?" rows="2" style="resize:none;line-height:1.5"></textarea>
     <button class="btn-go" id="goBtn" onclick="explore()">Explore →</button>
   </div>
 
