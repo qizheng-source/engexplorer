@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EngExplorer Free</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f0e8;
+  --bg2:#ede8de;
+  --card:#ffffff;
+  --card2:#f9f6f0;
+  --border:#e0d8cc;
+  --border2:#cec5b5;
+  --accent:#5a7a4a;
+  --accent-light:#6e9459;
+  --accent-pale:rgba(90,122,74,0.08);
+  --warm:#8b6340;
+  --warm-light:#a07548;
+  --cream:#2d2318;
+  --text:#2d2318;
+  --text2:#5a4f42;
+  --muted:#9a8e80;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;font-weight:400}
+
+.wrap{max-width:860px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* Header */
+header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--border);margin-bottom:32px}
+.logo{font-family:var(--serif);font-size:2.8rem;font-weight:700;color:var(--text);letter-spacing:-0.5px;line-height:1}
+.logo span{color:var(--accent-light)}
+.subtitle{font-family:var(--sans);font-size:0.88rem;color:var(--text2);margin-top:10px;font-weight:300;letter-spacing:0.2px}
+.credit{margin-top:12px;font-family:var(--mono);font-size:0.62rem;color:var(--muted);letter-spacing:0.5px}
+
+/* Score bar */
+.score-bar{display:flex;align-items:center;gap:12px;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 18px;margin-bottom:28px;font-family:var(--sans);font-size:0.82rem;color:var(--muted)}
+.score-num{font-family:var(--serif);font-size:1.3rem;font-weight:600;color:var(--accent)}
+
+/* Chips */
+.topic-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.chip{padding:7px 16px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-family:var(--sans);font-size:0.8rem;cursor:pointer;border-radius:100px;transition:all 0.2s;font-weight:400}
+.chip:hover,.chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+
+/* Search */
+.search-wrap{display:flex;gap:10px;margin-bottom:16px}
+.search-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.95rem;padding:14px 18px;border-radius:12px;outline:none;transition:border-color 0.2s;font-weight:300}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--muted)}
+.btn-go{padding:14px 26px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:0.9rem;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.btn-go:hover{background:var(--accent-light)}
+.btn-go:active{transform:scale(0.98)}
+.btn-go:disabled{opacity:0.4;cursor:not-allowed}
+
+/* Surprise */
+.btn-surprise{display:block;margin:0 auto 32px;padding:10px 24px;background:transparent;border:1px solid var(--warm);color:var(--warm);font-family:var(--sans);font-size:0.82rem;font-weight:500;border-radius:100px;cursor:pointer;transition:all 0.2s}
+.btn-surprise:hover{background:rgba(139,99,64,0.07)}
+
+/* Card */
+.concept-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:28px;animation:slideUp 0.4s ease forwards;box-shadow:0 2px 12px rgba(45,35,24,0.06)}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.card-header{padding:28px 28px 22px;border-bottom:1px solid var(--border);background:var(--card2)}
+.question-label{font-family:var(--mono);font-size:0.6rem;color:var(--warm);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.question-text{font-family:var(--serif);font-size:1.35rem;font-weight:600;color:var(--text);line-height:1.55;margin-bottom:18px}
+.concept-label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.concept-name{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--accent);line-height:1.3}
+.concept-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tag{font-family:var(--mono);font-size:0.58rem;padding:3px 10px;border-radius:100px;background:rgba(90,122,74,0.1);border:1px solid rgba(90,122,74,0.2);color:var(--accent)}
+.tag2{background:rgba(139,99,64,0.08);border-color:rgba(139,99,64,0.2);color:var(--warm)}
+
+/* Body */
+.card-body{padding:26px 28px}
+.wiki-summary{font-size:0.95rem;line-height:1.9;color:var(--text2);margin-bottom:26px;border-left:2px solid var(--accent);padding-left:16px;font-weight:300}
+.wiki-summary strong{color:var(--text);font-weight:500}
+.section-label{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+/* Facts */
+.facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:26px}
+@media(max-width:560px){.facts-grid{grid-template-columns:1fr}}
+.fact-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.fact-icon{font-size:1.2rem;margin-bottom:6px}
+.fact-title{font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.fact-text{font-size:0.78rem;color:var(--text2);line-height:1.6;font-weight:300}
+
+/* YouTube */
+.yt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:560px){.yt-grid{grid-template-columns:1fr}}
+.yt-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color 0.2s;text-decoration:none;display:block}
+.yt-card:hover{border-color:var(--warm)}
+.yt-thumb-placeholder{width:100%;aspect-ratio:16/9;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.yt-info{padding:10px 13px}
+.yt-channel{font-family:var(--mono);font-size:0.58rem;color:var(--warm);margin-bottom:3px;text-transform:uppercase;letter-spacing:1px}
+.yt-title{font-size:0.8rem;font-weight:400;color:var(--text2);line-height:1.4}
+
+/* Links */
+.links-list{display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
+.link-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color 0.2s}
+.link-item:hover{border-color:var(--accent)}
+.link-source{font-family:var(--mono);font-size:0.6rem;color:var(--muted);min-width:68px}
+.link-title{font-size:0.83rem;color:var(--text2);font-weight:300}
+.link-arrow{margin-left:auto;color:var(--muted)}
+
+/* Related */
+.related-chips{display:flex;flex-wrap:wrap;gap:8px}
+.related-chip{padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:100px;font-size:0.78rem;color:var(--muted);cursor:pointer;transition:all 0.2s}
+.related-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+
+/* Card footer */
+.card-footer{padding:14px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--card2)}
+.btn-next{padding:9px 20px;background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:var(--sans);font-size:0.82rem;font-weight:500;border-radius:8px;cursor:pointer;transition:all 0.2s}
+.btn-next:hover{border-color:var(--accent);color:var(--accent)}
+.source-note{font-family:var(--mono);font-size:0.58rem;color:var(--muted)}
+
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;padding:70px 20px;gap:16px}
+.spinner{width:36px;height:36px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-step{font-family:var(--mono);font-size:0.68rem;color:var(--border2);margin:3px 0;transition:color 0.3s;min-width:240px}
+.loading-step.done{color:var(--accent)}
+.loading-step.active{color:var(--warm)}
+
+/* Page footer */
+.page-footer{text-align:center;padding:36px 0 32px;font-family:var(--mono);font-size:0.62rem;color:var(--muted);line-height:2.2;border-top:1px solid var(--border);margin-top:8px}
+.page-footer strong{color:var(--text2);font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Eng<span>Explorer</span></div>
+    <div class="subtitle">Engineering concepts explained the way they should have been in school</div>
+    <div class="credit">Designed &amp; built by <strong style="color:var(--text2)">Qi Zheng</strong> &nbsp;·&nbsp; developed with Claude AI</div>
+  </header>
+
+  <div class="score-bar">
+    <span>🧠</span>
+    <span>Concepts explored today</span>
+    <span class="score-num" id="count">0</span>
+  </div>
+
+  <div class="topic-row">
+    <div class="chip active" onclick="setTopic(this,'')">🎲 Any</div>
+    <div class="chip" onclick="setTopic(this,'fluid mechanics')">💨 Fluids</div>
+    <div class="chip" onclick="setTopic(this,'materials science')">🔩 Materials</div>
+    <div class="chip" onclick="setTopic(this,'thermodynamics')">🔥 Thermo</div>
+    <div class="chip" onclick="setTopic(this,'mechanical vibration')">〰️ Dynamics</div>
+    <div class="chip" onclick="setTopic(this,'manufacturing engineering')">🏭 Mfg</div>
+    <div class="chip" onclick="setTopic(this,'engineering failures')">💥 Failures</div>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-input" id="topicInput" placeholder="Ask anything — why does a bridge collapse? why do bolts loosen? why does ice form on wings?"/>
+    <button class="btn-go" id="goBtn" onclick="explore()">Explore →</button>
+  </div>
+
+  <button class="btn-surprise" onclick="surprise()">✦ Why does... ? Hit me with a question</button>
+
+  <div id="output"></div>
+  <footer class="page-footer">
+    <strong>EngExplorer</strong> &nbsp;·&nbsp; Engineering concepts explained the way they should have been in school<br>
+    Designed &amp; built by <strong>Qi Zheng</strong> &nbsp;·&nbsp; developed with Claude AI &nbsp;·&nbsp; powered by Wikipedia &amp; YouTube
+  </footer>
+</div>
+
+<script>
+let selectedTopic = '';
+let exploreCount = parseInt(localStorage.getItem('engexp_free_count')||'0');
+document.getElementById('count').textContent = exploreCount;
+
+// Each entry: [question shown to user, wiki search term]
+const surprises = [
+  ['Why can you briefly touch lava if your hand is wet without getting burned?', 'Leidenfrost effect'],
+  ['Why did a bridge in Washington shake itself to pieces just from wind?', 'Tacoma Narrows Bridge collapse'],
+  ['Why does a curveball actually curve — and why do pitchers spin the ball?', 'Bernoulli principle'],
+  ['Why do planes not just fall out of the sky when the engine cuts out?', 'Gliding flight lift'],
+  ['Why does hot water sometimes freeze faster than cold water?', 'Mpemba effect'],
+  ['Why do tiny cracks in metal grow until the whole thing snaps — even under light loads?', 'Metal fatigue'],
+  ['Why does a small notch or hole in metal make it 10x weaker?', 'Stress concentration'],
+  ['Why do bridges and railways have gaps in them on purpose?', 'Thermal expansion'],
+  ['Why does a wine glass shatter when you sing the right note at it?', 'Resonance'],
+  ['Why does water shooting through a pump sometimes eat through solid metal?', 'Cavitation'],
+  ['Why do tall skyscrapers sway in the wind — and why is that intentional?', 'Tuned mass damper'],
+  ['Why does steel stretch before it breaks but glass just snaps instantly?', 'Ductility materials'],
+  ['Why do race cars press harder into the ground the faster they go?', 'Downforce aerodynamics'],
+  ['Why does a spinning gyroscope refuse to fall over?', 'Gyroscope precession'],
+  ['Why does a ship made of steel float but a steel coin sink?', 'Buoyancy Archimedes principle'],
+  ['Why do engineers deliberately design cars to crumple in a crash?', 'Crumple zone'],
+  ['Why does tightening a bolt too much actually make the joint weaker?', 'Bolt preload fatigue'],
+  ['Why do pipes sometimes explode with a loud bang when you close a tap fast?', 'Water hammer'],
+  ['Why do some materials get stronger the more you hit or bend them?', 'Work hardening'],
+  ['Why does metal slowly change shape over time even without extra load at high temperature?', 'Creep deformation'],
+  ['Why does F1 car flat bottom create more downforce than wings at high speed?', 'Ground effect aerodynamics'],
+  ['Why do buildings in Japan survive earthquakes that flatten buildings elsewhere?', 'Seismic base isolation'],
+  ['Why does a golf ball have dimples — would a smooth ball actually go further?', 'Golf ball aerodynamics drag'],
+  ['Why does concrete fail in tension but is incredibly strong in compression?', 'Reinforced concrete'],
+  ['Why does a rocket need to go sideways as well as upwards to reach orbit?', 'Orbital mechanics'],
+  ['Why does a parachute slow you down but an umbrella in a storm blows inside out?', 'Drag aerodynamics'],
+  ['Why can a tiny ant carry 50 times its own body weight but a human cannot?', 'Square-cube law biomechanics'],
+  ['Why do some metals feel cold to the touch but wood at the same temperature does not?', 'Thermal conductivity'],
+  ['Why does a supersonic jet create a sonic boom — what exactly is that bang?', 'Sonic boom Mach wave'],
+  ['Why do suspension bridges sway and bounce — and why do engineers allow it?', 'Suspension bridge dynamics'],
+];
+
+const ytChannels = [
+  {name:'Veritasium', icon:'🎬'},
+  {name:'Practical Engineering', icon:'🏗️'},
+  {name:'Real Engineering', icon:'✈️'},
+  {name:'The Efficient Engineer', icon:'⚙️'},
+];
+
+function setTopic(el, t){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  selectedTopic = t;
+}
+
+function surprise(){
+  const entry = surprises[Math.floor(Math.random()*surprises.length)];
+  currentQuestion = entry[0];
+  currentWikiTerm = entry[1];
+  document.getElementById('topicInput').value = entry[0];
+  explore();
+}
+
+function setStep(steps, n){
+  steps.forEach((s,i)=>{
+    s.className='loading-step'+(i<n?' done':i===n?' active':'');
+  });
+}
+
+let currentQuestion = '';
+let currentWikiTerm = '';
+
+async function explore(){
+  const raw = document.getElementById('topicInput').value.trim();
+  // Check if it matches a known question
+  const match = surprises.find(e => e[0] === raw);
+  let question, wikiTerm;
+  if(match){
+    question = match[0]; wikiTerm = match[1];
+  } else if(!raw){
+    const entry = surprises[Math.floor(Math.random()*surprises.length)];
+    question = entry[0]; wikiTerm = entry[1];
+    document.getElementById('topicInput').value = question;
+  } else {
+    // user typed their own thing
+    question = raw; wikiTerm = raw;
+  }
+  currentQuestion = question;
+  currentWikiTerm = wikiTerm;
+  const query = wikiTerm;
+
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true; btn.textContent = 'Loading...';
+
+  document.getElementById('output').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <div id="steps">
+        <div class="loading-step active">① Searching Wikipedia...</div>
+        <div class="loading-step">② Curating YouTube channels...</div>
+        <div class="loading-step">③ Building concept card...</div>
+      </div>
+    </div>`;
+
+  const stepEls = ()=>document.querySelectorAll('.loading-step');
+
+  try {
+    setStep(stepEls(), 0);
+    const wiki = await fetchWiki(wikiTerm);
+
+    setStep(stepEls(), 1);
+    await new Promise(r=>setTimeout(r,300));
+
+    setStep(stepEls(), 2);
+    await new Promise(r=>setTimeout(r,300));
+
+    renderCard(question, wikiTerm, wiki);
+
+    exploreCount++;
+    localStorage.setItem('engexp_free_count', exploreCount);
+    document.getElementById('count').textContent = exploreCount;
+
+  } catch(err){
+    document.getElementById('output').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--muted);font-family:var(--mono);font-size:0.8rem">
+        Could not find "${query}". Try a different term.<br><br>
+        <button onclick="explore()" style="margin-top:12px;padding:8px 20px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;cursor:pointer">Retry</button>
+      </div>`;
+  }
+
+  btn.disabled = false; btn.textContent = 'Explore →';
+}
+
+async function fetchWiki(query){
+  // Try direct title match first
+  try {
+    const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+    if(r.ok){ const d=await r.json(); if(d.extract&&d.extract.length>100) return d; }
+  } catch(e){}
+  // Search fallback
+  const sr = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=3`);
+  const sd = await sr.json();
+  if(sd.query?.search?.length){
+    for(const result of sd.query.search){
+      try {
+        const r2 = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(result.title)}`);
+        if(r2.ok){ const d=await r2.json(); if(d.extract&&d.extract.length>100) return d; }
+      } catch(e){}
+    }
+  }
+  throw new Error('Not found');
+}
+
+function extractFacts(extract){
+  const sentences = extract.split(/(?<=[.!?])\s+/).filter(s=>s.length>40&&s.length<220);
+  const icons=['⚙️','🔬','📐','🌡️','💡','🔩','⚡','🌊'];
+  const labels=['Core principle','How it works','Key property','Real behaviour','The physics','Why it matters','The mechanism','Engineering impact'];
+  return sentences.slice(1,5).map((s,i)=>({icon:icons[i%icons.length],title:labels[i%labels.length],text:s.replace(/\.$/,'')+'.'}));
+}
+
+const relatedPool = [
+  'stress concentration','fatigue failure','Bernoulli principle','Reynolds number',
+  'thermal expansion','resonance frequency','Poisson ratio','Youngs modulus',
+  'Leidenfrost effect','cavitation','creep deformation','work hardening',
+  'Coanda effect','gyroscope precession','hydraulic jump','heat pipe',
+  'buckling column','metal fatigue','turbocharger','crumple zone',
+  'shock absorber','Mpemba effect','water hammer','centrifugal force',
+];
+
+function getRelated(title){
+  return relatedPool.filter(t=>!title.toLowerCase().includes(t.split(' ')[0].toLowerCase())).sort(()=>Math.random()-0.5).slice(0,5);
+}
+
+function renderCard(question, query, wiki){
+  const title = wiki.title||query;
+  const extract = wiki.extract||'';
+  const description = wiki.description||'';
+  const wikiUrl = wiki.content_urls?.desktop?.page||`https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+
+  const sentences = extract.split(/(?<=[.!?])\s+/);
+  const firstSent = sentences[0]||extract;
+  const restSent = sentences.slice(1).join(' ');
+
+  const facts = extractFacts(extract);
+  const related = getRelated(title);
+
+  const factsHtml = facts.length ? facts.map(f=>`
+    <div class="fact-item">
+      <div class="fact-icon">${f.icon}</div>
+      <div class="fact-title">${f.title}</div>
+      <div class="fact-text">${f.text}</div>
+    </div>`).join('') : `<div class="fact-item"><div class="fact-text">${extract.slice(0,300)}</div></div>`;
+
+  const ytHtml = ytChannels.map(c=>`
+    <a class="yt-card" href="https://www.youtube.com/results?search_query=${encodeURIComponent(query+' '+c.name)}" target="_blank" rel="noopener">
+      <div class="yt-thumb-placeholder">${c.icon}</div>
+      <div class="yt-info">
+        <div class="yt-channel">${c.name}</div>
+        <div class="yt-title">"${query}" explained → search now</div>
+      </div>
+    </a>`).join('');
+
+  const relatedHtml = related.map(r=>`<div class="related-chip" onclick="searchRelated('${r}')">${r}</div>`).join('');
+
+  const displayQuestion = question !== query ? question : '';
+  document.getElementById('output').innerHTML = `
+    <div class="concept-card">
+      <div class="card-header">
+        ${displayQuestion ? `<div class="question-label">The Question</div>
+        <div class="question-text">${displayQuestion}</div>` : ''}
+        <div class="concept-label">The concept behind it</div>
+        <div class="concept-name">${title}</div>
+        <div class="concept-meta">
+          <span class="tag">Wikipedia</span>
+          ${description?`<span class="tag tag2">${description}</span>`:''}
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="wiki-summary">
+          <strong>${firstSent}</strong>${restSent?' '+restSent:''}
+        </div>
+
+        <div class="section-label">Key concepts to remember</div>
+        <div class="facts-grid">${factsHtml}</div>
+
+        <div class="section-label">▶ Watch it explained on YouTube</div>
+        <div class="yt-grid">${ytHtml}</div>
+        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(query+' engineering explained')}" target="_blank" rel="noopener"
+           style="display:block;text-align:center;font-family:var(--mono);font-size:0.62rem;color:var(--muted);margin-bottom:26px;text-decoration:none;padding:8px;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+          → Browse all YouTube results for "${query}"
+        </a>
+
+        <div class="section-label">Read more</div>
+        <div class="links-list">
+          <a class="link-item" href="${wikiUrl}" target="_blank" rel="noopener">
+            <span class="link-source">Wikipedia</span>
+            <span class="link-title">Full article: ${title}</span>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="link-item" href="https://www.google.com/search?q=${encodeURIComponent(query+' engineering explained')}" target="_blank" rel="noopener">
+            <span class="link-source">Google</span>
+            <span class="link-title">More results for "${query}"</span>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="link-item" href="https://scholar.google.com/scholar?q=${encodeURIComponent(query)}" target="_blank" rel="noopener">
+            <span class="link-source">Scholar</span>
+            <span class="link-title">Academic papers on ${title}</span>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="section-label">Explore related concepts</div>
+        <div class="related-chips">${relatedHtml}</div>
+      </div>
+      <div class="card-footer">
+        <div class="source-note">// Wikipedia · YouTube · open web</div>
+        <button class="btn-next" onclick="nextConcept()">Next concept →</button>
+      </div>
+    </div>`;
+}
+
+function searchRelated(term){
+  document.getElementById('topicInput').value = term;
+  explore();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nextConcept(){
+  const entry = surprises[Math.floor(Math.random()*surprises.length)];
+  document.getElementById('topicInput').value = entry[0];
+  explore();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('topicInput').addEventListener('keydown',e=>{if(e.key==='Enter')explore();});
+</script>
+</body>
+</html>
